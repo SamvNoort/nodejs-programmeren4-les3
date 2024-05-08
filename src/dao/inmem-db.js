@@ -12,14 +12,14 @@ const database = {
             id: 0,
             firstName: 'Hendrik',
             lastName: 'van Dam',
-            emailAdress: 'hvd@server.nl'
+            emailAddress: 'hvd@server.nl'
             // Hier de overige velden uit het functioneel ontwerp
         },
         {
             id: 1,
             firstName: 'Marieke',
             lastName: 'Jansen',
-            emailAdress: 'm@server.nl'
+            emailAddress: 'm@server.nl'
             // Hier de overige velden uit het functioneel ontwerp
         }
     ],
@@ -51,6 +51,10 @@ const database = {
     add(item, callback) {
         // Simuleer een asynchrone operatie
         setTimeout(() => {
+
+            if (this.isInDatabase(item.emailAdress)) {
+                callback({message: 'Email already in use'}, null)
+            }
             // Voeg een id toe en voeg het item toe aan de database
             item.id = this._index++
             // Voeg item toe aan de array
@@ -60,9 +64,20 @@ const database = {
             // met het toegevoegde item als argument, of null als er een fout is opgetreden
             callback(null, item)
         }, this._delayTime)
-    }
+    },
 
     // Voeg zelf de overige database functionaliteit toe
+    isInDatabase(email) {
+        setTimeout(() => {
+            for (const obj of this._data) {
+                if (obj.emailAddress === email) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }, this._delayTime);
+    }
 }
 
 module.exports = database
