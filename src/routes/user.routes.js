@@ -85,8 +85,12 @@ router.post('/api/user', validateUserCreateChaiExpect, userController.create)
 router.get('/api/user', userController.getAll)
 router.get('/api/user/:userId', userController.getById)
 
+// update en delete routes
+router.put('/api/user/:userid', validateUserCreateChaiExpect, userController.update)
+router.delete('/api/user/:userid', userController.delete)
+
 // Tijdelijke routes om niet bestaande routes op te vangen
-router.put('/api/user/:userId', notFound)
-router.delete('/api/user/:userId', notFound)
+// router.put('/api/user/:userId', notFound)
+// router.delete('/api/user/:userId', notFound)
 
 module.exports = router
