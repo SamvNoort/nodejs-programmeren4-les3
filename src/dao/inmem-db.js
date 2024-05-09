@@ -67,16 +67,49 @@ const database = {
     },
 
     // Voeg zelf de overige database functionaliteit toe
-    isInDatabase(email) {
+    isInDatabase(email, callback) {
+        // Simulate an asynchronous operation
         setTimeout(() => {
-            for (const obj of this._data) {
-                if (obj.emailAddress === email) {
-                    return true;
-                } else {
-                    return false;
-                }
+            const duplicate = this._data.some(item => item.emailAddress === email)
+            callback(null, duplicate)
+        }, this._delayTime)
+    },
+
+    update(id, updatedUser, callback) {
+        setTimeout(() => {
+            const index = this._data.findIndex(data => data.id === Number(id))
+            if (index === -1) {
+                callback({ status: 400, message: 'Error: User not found!' }, null)
+                return;
             }
-        }, this._delayTime);
+
+            const newEmail = updatedUser.emailAdress
+            this.isInDatabase(newEmail, (error, duplicate) => {
+                if (error) {
+                    callback({ status: 500, message: 'Error while checking if email already is in the database!' }, null)
+                    return;
+                }
+                if (duplicate) {
+                    callback({ status: 404, message: 'Error: Email address already exists!' }, null)
+                    return
+                }
+
+                this._data[index] = { ...this._data[index], ...updatedUser }
+                callback(null, this._data[index])
+            })
+        }, this._delayTime)
+    },
+
+    delete(id, callback) {
+        setTimeout(() => {
+            const index = this._data.findIndex(data => data.id === Number(id));
+            if (index === -1) {
+                callback({ status:404, message: 'Error: User not found!' }, null)
+                return
+            }
+            const deletedData = this._data.splice(index, 1)
+            callback(null, deletedData[0])
+        }, this._delayTime)
     }
 }
 
