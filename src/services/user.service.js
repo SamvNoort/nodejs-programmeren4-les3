@@ -35,18 +35,33 @@ const userService = {
         })
     },
 
-    update: (user, callback) => {
+    update: (id, user, callback) => {
         logger.info('update')
-        database.update(user, (err, data) => {
+        database.update(id, user, (err, data) => {
             if(err) {
-                logger.info(
-                    'error creating user: ',
-                    err.message || 'unknown error'
-                )
+                logger.trace(`Error while trying to update user with id ${data.id}.`)
+                callback(err, null)
             } else {
                 logger.trace(`User updated with id ${data.id}.`)
                 callback(null, {
+                    status: 200,
                     message: `User updated with id ${data.id}.`,
+                    data: data
+                })
+            }
+        })
+    },
+
+    delete: (id, callback) => {
+        database.delete(id, (err, data) => {
+            if (err) {
+                logger.trace(`Error occured while trying to delete user with id ${id}`)
+                callback(err, null)
+            } else {
+                logger.trace(``)
+                callback(null, {
+                    status: 200,
+                    message: `User with id ${id} deleted`,
                     data: data
                 })
             }
